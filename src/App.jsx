@@ -1,34 +1,26 @@
 import React from "react";
-import { Routes, Route, Outlet } from "react-router-dom";
-import TopNav from "./components/layout/TopNav";
-import Sidebar from "./components/layout/Sidebar";
-import Dashboard from "./pages/Dashboard"; // correct path
+import { Routes, Route } from "react-router-dom";
+import MainLayout from "./layouts/MainLayout";
+import Dashboard from "./pages/Dashboard";
 import PortfolioPage from "./pages/PortfolioPage";
+import Watchlist from "./pages/Watchlist";
+import Transactions from "./pages/Transactions";
+import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 
-function AppLayout() {
+function App() {
   return (
-    <div className="min-h-screen bg-neutral-950">
-      <TopNav />
-      <div className="container flex gap-6 py-6">
-        <Sidebar />
-        <main className="flex-1 space-y-6">
-          <Outlet />
-        </main>
-      </div>
-    </div>
-  );
-}
-
-export default function App() {
-  return (
-    <Routes>
-      <Route element={<AppLayout />}>
+    <MainLayout>
+      <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/portfolio" element={<PortfolioPage />} />
+        <Route path="/watchlist" element={<Watchlist />} />
+        <Route path="/transactions" element={<Transactions />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
-      </Route>
-    </Routes>
+      </Routes>
+    </MainLayout>
   );
 }
 
+export default App;

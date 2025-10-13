@@ -1,5 +1,11 @@
 import React from "react";
-import { ArrowUpRight, ArrowDownRight, TrendingUp, Upload, Download } from "lucide-react";
+import {
+  ArrowUpRight,
+  ArrowDownRight,
+  TrendingUp,
+  Upload,
+  Download,
+} from "lucide-react";
 import {
   LineChart,
   Line,
@@ -7,124 +13,185 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
 } from "recharts";
 import StatCard from "../components/StatCard";
-import ChartCard from "../components/ChartCard";
+import StockCard from "../components/StockCard";
+
+const data = [
+  { name: "Mon", value: 400 },
+  { name: "Tue", value: 800 },
+  { name: "Wed", value: 600 },
+  { name: "Thu", value: 1200 },
+  { name: "Fri", value: 900 },
+  { name: "Sat", value: 1500 },
+];
+
+const pieData = [
+  { name: "Stocks", value: 65 },
+  { name: "Bonds", value: 20 },
+  { name: "Crypto", value: 15 },
+];
+
+const COLORS = ["#4f46e5", "#10b981", "#f59e0b"];
+
+const topGainers = [
+  { name: "TCS", price: "₹3,560", change: "+2.8%" },
+  { name: "Infosys", price: "₹1,490", change: "+1.9%" },
+  { name: "HDFC Bank", price: "₹1,620", change: "+1.5%" },
+];
+
+const topLosers = [
+  { name: "Reliance", price: "₹2,450", change: "-1.8%" },
+  { name: "ITC", price: "₹440", change: "-1.3%" },
+  { name: "SBI", price: "₹730", change: "-1.1%" },
+];
 
 export default function Dashboard() {
-  const stocks = [
-    { symbol: "AAPL", name: "Apple Inc.", price: 178.72, change: "+1.32%" },
-    { symbol: "GOOGL", name: "Alphabet Inc.", price: 132.45, change: "-0.85%" },
-    { symbol: "TSLA", name: "Tesla Inc.", price: 254.19, change: "+2.10%" },
-    { symbol: "AMZN", name: "Amazon Inc.", price: 138.91, change: "-0.42%" },
-  ];
-
-  const performanceData = [
-    { month: "Jan", value: 20 },
-    { month: "Feb", value: 35 },
-    { month: "Mar", value: 30 },
-    { month: "Apr", value: 50 },
-    { month: "May", value: 45 },
-    { month: "Jun", value: 60 },
-  ];
-
-  const portfolioValue = 228000.47;
-  const dayChangeAbs = 3.21;
-  const dayChangePct = 1.42;
-  const isPositive = dayChangePct >= 0;
-
   return (
-    <div className="space-y-6">
-      {/* Portfolio summary */}
-      <div className="card p-5 md:p-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <p className="text-sm text-gray-400">Portfolio value</p>
-            <div className="mt-1 text-3xl font-semibold text-gray-100">
-              ${portfolioValue.toLocaleString()}
-            </div>
-            <div className="mt-2 flex items-center gap-2">
-              <span className={isPositive ? "chip-green" : "chip-red"}>
-                {isPositive ? <ArrowUpRight className="h-3 w-3 mr-1" /> : <ArrowDownRight className="h-3 w-3 mr-1" />}
-                {isPositive ? "+" : "-"}
-                {Math.abs(dayChangePct).toFixed(2)}% (${Math.abs(dayChangeAbs).toFixed(2)})
-              </span>
-              <span className="chip-neutral">Today</span>
-            </div>
+    <div className="space-y-10">
+      {/* ====== Header ====== */}
+      <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+
+      {/* ====== Stat Cards ====== */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard
+          title="Portfolio Value"
+          value="₹1,25,000"
+          icon={<TrendingUp className="text-green-400" />}
+        />
+        <StatCard
+          title="Invested Amount"
+          value="₹1,00,000"
+          icon={<Upload className="text-blue-400" />}
+        />
+        <StatCard
+          title="Returns"
+          value="+₹25,000"
+          icon={<ArrowUpRight className="text-green-400" />}
+        />
+        <StatCard
+          title="Withdrawn"
+          value="₹5,000"
+          icon={<Download className="text-red-400" />}
+        />
+      </div>
+
+      {/* ====== Charts Section ====== */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Line Chart */}
+        <div className="col-span-2 bg-gray-800 p-6 rounded-2xl shadow">
+          <h2 className="text-lg font-semibold mb-4">Portfolio Growth</h2>
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={data}>
+              <XAxis dataKey="name" stroke="#9CA3AF" />
+              <YAxis stroke="#9CA3AF" />
+              <Tooltip />
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke="#6366f1"
+                strokeWidth={3}
+                dot={{ r: 4 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Pie Chart */}
+        <div className="bg-gray-800 p-6 rounded-2xl shadow">
+          <h2 className="text-lg font-semibold mb-4">Asset Distribution</h2>
+          <ResponsiveContainer width="100%" height={250}>
+            <PieChart>
+              <Pie
+                data={pieData}
+                dataKey="value"
+                nameKey="name"
+                outerRadius={80}
+                label
+              >
+                {pieData.map((entry, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* ====== Top Gainers & Losers ====== */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-gray-800 p-6 rounded-2xl shadow">
+          <h2 className="text-lg font-semibold mb-4 text-green-400">
+            Top Gainers
+          </h2>
+          <div className="space-y-3">
+            {topGainers.map((stock, i) => (
+              <StockCard key={i} {...stock} type="gainer" />
+            ))}
           </div>
-          <div className="flex items-center gap-2">
-            <button className="btn-primary">
-              <TrendingUp className="h-4 w-4 mr-2" />
-              Trade
-            </button>
-            <button className="btn-outline">
-              <Download className="h-4 w-4 mr-2" />
-              Deposit
-            </button>
-            <button className="btn-outline">
-              <Upload className="h-4 w-4 mr-2" />
-              Withdraw
-            </button>
+        </div>
+
+        <div className="bg-gray-800 p-6 rounded-2xl shadow">
+          <h2 className="text-lg font-semibold mb-4 text-red-400">
+            Top Losers
+          </h2>
+          <div className="space-y-3">
+            {topLosers.map((stock, i) => (
+              <StockCard key={i} {...stock} type="loser" />
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Key stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="1D Change" value={`${isPositive ? "+" : "-"}${Math.abs(dayChangePct)}%`} delta={`$${Math.abs(dayChangeAbs)}`} positive={isPositive} />
-        <StatCard title="Total Returns" value="$12,430.00" delta="+5.8%" positive />
-        <StatCard title="Holdings" value="24" delta="+2 Today" positive />
-        <StatCard title="Cash Balance" value="$8,540.00" />
-      </div>
-
-      {/* Performance chart */}
-      <ChartCard title="Performance" subtitle="Last 6 months">
-        <ResponsiveContainer width="100%" height={220}>
-          <LineChart data={performanceData}>
-            <XAxis dataKey="month" stroke="#9CA3AF" fontSize={12} />
-            <YAxis stroke="#9CA3AF" fontSize={12} />
-            <Tooltip />
-            <Line type="monotone" dataKey="value" stroke="#10b981" strokeWidth={2} dot={false} />
-          </LineChart>
-        </ResponsiveContainer>
-      </ChartCard>
-
-      {/* Watchlist */}
-      <div className="card p-4">
-        <div className="card-header mb-3">
-          <h3 className="text-sm font-medium text-gray-200">Watchlist</h3>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="table">
-            <thead>
-              <tr className="[&>th]:px-3 [&>th]:py-2 text-left">
-                <th>Symbol</th>
-                <th>Name</th>
-                <th className="text-right">Price</th>
-                <th className="text-right">Change</th>
+      {/* ====== Extra Dashboard Section (from your 1st version) ====== */}
+      <div className="bg-gray-800 p-6 rounded-2xl shadow space-y-6">
+        <h2 className="text-xl font-semibold text-white">Best Prices to Buy</h2>
+        <table className="w-full text-left text-gray-300">
+          <thead className="text-gray-400 border-b border-gray-700">
+            <tr>
+              <th className="py-2">Stock</th>
+              <th>Price</th>
+              <th>Recommendation</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              { name: "Reliance", price: "₹2,400", rec: "Buy" },
+              { name: "ICICI Bank", price: "₹960", rec: "Hold" },
+              { name: "Tech Mahindra", price: "₹1,350", rec: "Buy" },
+            ].map((s) => (
+              <tr key={s.name} className="border-b border-gray-700">
+                <td className="py-2">{s.name}</td>
+                <td>{s.price}</td>
+                <td
+                  className={`${
+                    s.rec === "Buy"
+                      ? "text-emerald-400"
+                      : s.rec === "Hold"
+                      ? "text-yellow-400"
+                      : "text-red-400"
+                  }`}
+                >
+                  {s.rec}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {stocks.map((s) => {
-                const neg = s.change.includes("-");
-                return (
-                  <tr key={s.symbol} className="[&>td]:px-3 [&>td]:py-2">
-                    <td className="font-medium">{s.symbol}</td>
-                    <td className="text-gray-400">{s.name}</td>
-                    <td className="text-right font-medium">${s.price.toFixed(2)}</td>
-                    <td className="text-right">
-                      <span className={neg ? "chip-red" : "chip-green"}>
-                        {neg ? <ArrowDownRight className="h-3 w-3 mr-1" /> : <ArrowUpRight className="h-3 w-3 mr-1" />}
-                        {s.change}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+

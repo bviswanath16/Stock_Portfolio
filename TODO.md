@@ -37,3 +37,5 @@ This TODO tracks the implementation of the approved plan.
 ## Next
 - Run the dev server and verify the UI: navigation, layout, responsiveness.
 - Tweak micro-interactions and spacing if needed.
+
+88KZ0G5JGPPQOS7F= API KEY

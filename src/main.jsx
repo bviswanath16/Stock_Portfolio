@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
-import "./styles/index.css";   // <-- add this line
+import "./index.css"; // Make sure this exists and is imported
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
